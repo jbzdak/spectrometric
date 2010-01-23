@@ -20,20 +20,25 @@ public class IntBufferResult implements SpectrometricResult{
       this.lastChannel = lastChannel;
    }
 
+   @Override
    public int getFirstChannel() {
       return firstChannel;
    }
 
+   @Override
    public int getLastChannel() {
       return lastChannel;
    }
 
+   @Override
    public void dispose() { }
 
+   @Override
    public int getChannelNo() {
       return lastChannel - firstChannel;
    }
 
+   @Override
    public int get(int channelNo) {
       return contents.get(channelNo - firstChannel);
    }

@@ -11,6 +11,7 @@
    <modules>
       <module>spectrometricApi</module>
       <module>util</module>
+      <module>math</module>
    </modules>
 
 
