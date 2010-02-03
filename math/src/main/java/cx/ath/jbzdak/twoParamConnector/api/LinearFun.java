@@ -9,7 +9,7 @@ public class LinearFun implements SingleDimFunction{
 
    private final double sigmaA, sigmaB;
 
-   private static final Pattern pattern = Pattern.compile("\\s*([-+]?\\s*[\\d\\.\\,]+)\\s*\\*?\\s*x\\s*([+-]\\s*[\\d\\.\\,]+)");
+   private static final Pattern pattern = Pattern.compile("\\s*([-+]?\\s*[\\d\\.\\,]+)\\s*\\*?\\s*x\\s*([+-][\\d\\.\\,]+)");
 
    public static LinearFun parseFromHumanFormat(String parseFrom){
       parseFrom = parseFrom.replaceAll("\\,", ".");
