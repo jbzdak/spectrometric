@@ -21,27 +21,11 @@
 
 package cx.ath.jbzdak.spectrometric.api;
 
-import java.util.List;
-
 /**
- * @author Jacek Bzdak jbzdak@gmail.com
- *         Date: Jan 20, 2010
+ * Author: Jacek Bzdak
  */
-public interface MultiParametricResultSet {
+public interface RegionOfInterest extends SpectrometricResult{
 
-   /**
-    *
-    * @return First channel that is stored in this result.
-    */
-   int getFirstChannel();
+   SpectrometricResult getParent();
 
-   /**
-    * @return First channel that is not stored in this result. Last channel has number
-    * <code> getLastChannel - 1</code>
-    */
-   int getLastChannel();
-
-   int getParameterNumber();
-
-   List<MultiParametricPoint> getPoints();
 }

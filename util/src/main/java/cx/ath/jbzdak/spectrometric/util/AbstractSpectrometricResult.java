@@ -19,29 +19,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cx.ath.jbzdak.spectrometric.api;
+package cx.ath.jbzdak.spectrometric.util;
 
-import java.util.List;
+import cx.ath.jbzdak.spectrometric.api.RegionOfInterest;
+import cx.ath.jbzdak.spectrometric.api.SpectrometricResult;
 
 /**
  * @author Jacek Bzdak jbzdak@gmail.com
- *         Date: Jan 20, 2010
+ *         Date: 2010-02-12
  */
-public interface MultiParametricResultSet {
+public abstract class AbstractSpectrometricResult implements SpectrometricResult{
 
-   /**
-    *
-    * @return First channel that is stored in this result.
-    */
-   int getFirstChannel();
 
-   /**
-    * @return First channel that is not stored in this result. Last channel has number
-    * <code> getLastChannel - 1</code>
-    */
-   int getLastChannel();
+   protected final int firstChannel, lastChannel;
 
-   int getParameterNumber();
+   protected AbstractSpectrometricResult(int firstChannel, int lastChannel) {
+      this.firstChannel = firstChannel;
+      this.lastChannel = lastChannel;
+   }
 
-   List<MultiParametricPoint> getPoints();
+   @Override
+   public RegionOfInterest createROI(int startChannel, int endChannel) {
+      if(startChannel < this.firstChannel || endChannel > this.lastChannel){
+         throw new IndexOutOfBoundsException();
+      }
+      return new ROIImpl(startChannel, endChannel, this);
+   }
 }

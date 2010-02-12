@@ -21,74 +21,58 @@
 
 package cx.ath.jbzdak.spectrometric.util;
 
-import cx.ath.jbzdak.spectrometric.api.SpectrometricResult;
+import javax.annotation.concurrent.Immutable;
 
-import java.nio.IntBuffer;
-import java.security.InvalidParameterException;
+import cx.ath.jbzdak.spectrometric.api.RegionOfInterest;
+import cx.ath.jbzdak.spectrometric.api.SpectrometricResult;
 
 /**
  * @author Jacek Bzdak jbzdak@gmail.com
- *         Date: Jan 20, 2010
+ *         Date: 2010-02-12
  */
-public class MutableResult extends AbstractSpectrometricResult{
+@Immutable
+public class ROIImpl extends AbstractSpectrometricResult implements RegionOfInterest {
 
-   final int[] contents;
+   private final SpectrometricResult parent;
 
-   public MutableResult(int firstChannel, int lastChannel, int[] contents) {
+   public ROIImpl(int firstChannel, int lastChannel, SpectrometricResult parent) {
       super(firstChannel, lastChannel);
-      if(contents.length < (lastChannel - firstChannel)){
-         throw new InvalidParameterException("Contents array is to small");
-      }
-      this.contents = contents;
+      this.parent = parent;
    }
 
-   public MutableResult(int firstChannel, int lastChannel) {
-      super(firstChannel, lastChannel);
-      contents = new int[lastChannel - firstChannel];
+   public SpectrometricResult getParent() {
+      return parent;
    }
 
-   public SpectrometricResult createImmutableView(){
-      return new IntBufferResult(firstChannel, lastChannel, IntBuffer.wrap(contents));
-   }
-
-   @Override
    public int getFirstChannel() {
       return firstChannel;
    }
 
-   @Override
    public int getLastChannel() {
       return lastChannel;
    }
-
-   @Override
-   public void dispose() { }
 
    @Override
    public int getChannelNo() {
       return lastChannel - firstChannel;
    }
 
-   public void clear(){
-      for (int ii = 0; ii < contents.length; ii++) {
-         contents[ii] =0;
+   @Override
+   public int get(int channelNo) {
+      if(channelNo > lastChannel || channelNo < firstChannel){
+         throw new IndexOutOfBoundsException();
       }
+      return parent.get(channelNo);
    }
 
    @Override
-   public int get(int channelNo) {
-      return contents[channelNo - firstChannel];
+   public RegionOfInterest createROI(int startChannel, int endChannel) {
+      if(startChannel < this.firstChannel || endChannel > this.lastChannel){
+         throw new IndexOutOfBoundsException();
+      }
+      return new ROIImpl(startChannel, endChannel, parent);
    }
-
-   public void incrementChannel(int channelNo){
-      contents[channelNo - firstChannel]++;
-   }
-
-   public void setValue(int channelNo){
-      contents[channelNo - firstChannel] = channelNo;
-   }
-
-   public int[] getContents() {
-      return contents;
-   }
+   
+   @Override
+   public void dispose() {  }
 }
